@@ -8,10 +8,15 @@ import DatePicker from "../datePicker.tsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// type Item = {
+//   id: number;
+//   name: string;
+// };
+
 const formSchema = z.object({
-  firstSpeaker: z.any(),
-  secondSpeaker: z.any(),
-  thirdSpeaker: z.any(),
+  firstSpeaker: z.object({ id: z.number(), name: z.string() }),
+  secondSpeaker: z.object({ id: z.number(), name: z.string() }),
+  thirdSpeaker: z.object({ id: z.number(), name: z.string() }),
   sacramentMeetingDate: z.date().transform((date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -20,13 +25,8 @@ const formSchema = z.object({
   }),
 });
 
-type Item = {
-  id: number;
-  name: string;
-};
-
 const ProfileForm = () => {
-  const [members, setMembers] = useState<Item[]>([]);
+  const [members, setMembers] = useState();
 
   useEffect(() => {
     axios
@@ -37,26 +37,22 @@ const ProfileForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstSpeaker: "",
-      secondSpeaker: "",
-      thirdSpeaker: "",
       sacramentMeetingDate: new Date().toISOString().split("T")[0],
     },
   });
 
+  const { errors } = form.formState;
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
-    // axios
-    //   .post("http://localhost:3333/speakers/insert", values)
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
+    console.log(errors);
+    axios
+      .post("http://localhost:3333/speakers/insert", values)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
