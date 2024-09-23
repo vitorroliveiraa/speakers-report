@@ -16,11 +16,16 @@ import { CalendarIcon } from "lucide-react";
 import { FormControl, FormItem, FormLabel } from "./ui/form.tsx";
 import { ControllerRenderProps, FieldError } from "react-hook-form";
 
+type Item = {
+  id: number;
+  name: string;
+};
+
 interface FormFields {
-  firstSpeaker: any;
-  secondSpeaker: any;
-  thirdSpeaker: any;
-  sacramentMeetingDate: string;
+  firstSpeaker: Item;
+  secondSpeaker: Item;
+  thirdSpeaker: Item;
+  sacramentMeetingDate: Date;
 }
 
 interface AutoCompleteInputProps {
@@ -30,11 +35,7 @@ interface AutoCompleteInputProps {
 }
 
 export default function DatePicker({ label, field }: AutoCompleteInputProps) {
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
-    field.value ? new Date(field.value) : undefined
-  );
-
-  //   const selectedDate = field.value ? field.value : undefined;
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>();
 
   return (
     <FormItem className="my-4">
@@ -71,6 +72,7 @@ export default function DatePicker({ label, field }: AutoCompleteInputProps) {
                 startMonth={new Date(1999, 11)}
                 endMonth={new Date(2025, 2)}
                 locale={ptBR}
+                disabled={{ dayOfWeek: [1, 2, 3, 4, 5, 6] }}
               />
             </PopoverContent>
           </Popover>

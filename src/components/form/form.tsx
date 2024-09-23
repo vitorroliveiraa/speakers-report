@@ -8,46 +8,67 @@ import DatePicker from "../datePicker.tsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// type Item = {
-//   id: number;
-//   name: string;
-// };
+type Item = {
+  id: number;
+  name: string;
+};
 
 const formSchema = z.object({
   firstSpeaker: z.object({ id: z.number(), name: z.string() }),
   secondSpeaker: z.object({ id: z.number(), name: z.string() }),
   thirdSpeaker: z.object({ id: z.number(), name: z.string() }),
-  sacramentMeetingDate: z.date().transform((date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }),
+  sacramentMeetingDate: z.date(),
 });
-
-const ProfileForm = () => {
-  const [members, setMembers] = useState();
+// sacramentMeetingDate: z
+// .string()
+// .refine((val) => !isNaN(Date.parse(val)), {
+//   message: "Invalid date format",
+// }) // Verifica se a string pode ser convertida para uma data válida
+// .transform((val) => new Date(val)), // Transforma a string em Date
+const ProfileForm = ({ onMemberAdded }) => {
+  const [members, setMembers] = useState<Item[]>([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3333/church_members")
-      .then((res) => setMembers(res.data));
+    axios.get("http://localhost:3333/church_members").then((res) => {
+      setMembers(res.data);
+      console.log("members=>", res.data);
+    });
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      sacramentMeetingDate: new Date().toISOString().split("T")[0],
+      sacramentMeetingDate: new Date(),
     },
   });
 
   const { errors } = form.formState;
+  console.log("erro zod=>", errors);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(errors);
+    const data = [
+      {
+        sacrament_meeting_date: values.sacramentMeetingDate,
+        member_id: values.firstSpeaker.id,
+        speaker_position: 1,
+      },
+      {
+        sacrament_meeting_date: values.sacramentMeetingDate,
+        member_id: values.secondSpeaker.id,
+        speaker_position: 2,
+      },
+      {
+        sacrament_meeting_date: values.sacramentMeetingDate,
+        member_id: values.thirdSpeaker.id,
+        speaker_position: 3,
+      },
+    ];
+
     axios
-      .post("http://localhost:3333/speakers/insert", values)
+      .post("http://localhost:3333/speakers/insert", data)
       .then(function (response) {
         console.log(response);
+        onMemberAdded();
       })
       .catch(function (err) {
         console.log(err);

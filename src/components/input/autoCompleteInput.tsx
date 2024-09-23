@@ -14,7 +14,7 @@ interface FormFields {
   firstSpeaker: Item;
   secondSpeaker: Item;
   thirdSpeaker: Item;
-  sacramentMeetingDate: string;
+  sacramentMeetingDate: Date;
 }
 
 interface CustomInputProps {
@@ -24,12 +24,11 @@ interface CustomInputProps {
     "firstSpeaker" | "secondSpeaker" | "thirdSpeaker"
   >;
   error?: FieldError;
-  data: any;
+  data: Item[];
   position?: string;
 }
 
 const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
-  //   const [inputValue, setInputValue] = useState<Item>(field.value || "");
   const [inputText, setInputText] = useState<string>(field.value?.name || "");
 
   const [suggestions, setSuggestions] = useState(data);
@@ -55,17 +54,16 @@ const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
     setSuggestions([]);
   };
 
-  const handleSuggestionClick = (suggestion: any) => {
+  const handleSuggestionClick = (suggestion: Item) => {
     console.log("handleSuggestionClick", suggestion);
 
     setInputText(suggestion.name);
     field.onChange(suggestion);
     setTimeout(() => setSuggestions([]), 0);
-    // setSuggestions([]);
   };
 
-  const handleMouseDown = (suggestion: any) => {
-    handleSuggestionClick(suggestion); // Executa a seleção da sugestão
+  const handleMouseDown = (suggestion: Item) => {
+    handleSuggestionClick(suggestion);
   };
 
   return (
@@ -98,8 +96,6 @@ const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
           {inputText && suggestions?.length > 0 && (
             <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto">
               {suggestions?.map((suggestion: Item) => {
-                // console.log("arraySuggestion", suggestion);
-
                 return (
                   <li
                     key={suggestion.id}

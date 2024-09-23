@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 type Person = {
   name: string;
@@ -6,16 +7,15 @@ type Person = {
   sundays: number;
 };
 
-const peoples: Person[] = [
-  { name: "João B.", date: "13/09/2024", sundays: 15 },
-  { name: "Maria A.", date: "12/09/2024", sundays: 10 },
-  { name: "Carlos C.", date: "11/09/2024", sundays: 8 },
-  // Adicione mais pessoas conforme necessário
-];
 export default function CustomList({ data }) {
+  const sortedData = [...data].sort(
+    (a, b) =>
+      Number(b.sundays_since_last_speech) - Number(a.sundays_since_last_speech)
+  );
+
   return (
     <div className="space-y-4 mb-4">
-      {data?.map((person, index) => (
+      {sortedData?.map((person, index) => (
         <div
           key={index}
           className="flex items-center gap-4 rounded-lg bg-slate-500 p-4 hover:bg-slate-600 delay-100 duration-100 cursor-pointer"

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import "./App.css";
 import CustomList from "./components/customList/customList.tsx";
 import ProfileForm from "./components/form/form.tsx";
@@ -26,21 +26,29 @@ function App() {
   };
 
   // Função para capturar o valor digitado no input
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  useEffect(() => {
+  function fetchMembers() {
     axios
       .get("http://localhost:3333/speakers")
       .then((res) => setList(res.data));
+  }
+  useEffect(() => {
+    fetchMembers();
   }, []);
+
+  const handleNewMemberAdded = () => {
+    // Atualiza a lista após a inserção de um novo membro
+    fetchMembers();
+  };
 
   return (
     <body className="bg-white">
       <main className="mx-auto max-w-7xl px-4 sm:px-6 sm:py-4 lg:px-8">
         <div className="mx-auto max-w-2xl">
-          <ProfileForm />
+          <ProfileForm onMemberAdded={handleNewMemberAdded} />
           <section>
             <div className="h-12 mt-12 mb-4 flex justify-between items-center transition-all duration-500">
               <div className="content-center">
