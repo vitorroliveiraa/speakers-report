@@ -11,8 +11,9 @@ import axios from "axios";
 function App() {
   // Estado para controlar se o campo de pesquisa está visível
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [list, setList] = useState();
+  //   const [searchTerm, setSearchTerm] = useState("");
+  const [list, setList] = useState([]);
+  const [listSuggestions, setListSuggestions] = useState([]);
 
   // Função para abrir o input de pesquisa
   const handleSearchClick = () => {
@@ -22,18 +23,30 @@ function App() {
   // Função para fechar o input de pesquisa
   const handleCloseSearch = () => {
     setIsSearchActive(false); // Esconde o input
-    setSearchTerm(""); // Limpa o campo de pesquisa
+    // setSearchTerm(""); // Limpa o campo de pesquisa
   };
 
   // Função para capturar o valor digitado no input
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    // setSearchTerm(e.target.value);
+
+    const search = e.target.value;
+    if (search !== "") {
+      const filteredSuggestions = list?.filter((item: { name: string }) =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      setListSuggestions(filteredSuggestions);
+    } else {
+      setListSuggestions(list);
+    }
   };
 
   function fetchMembers() {
-    axios
-      .get("http://localhost:3333/speakers")
-      .then((res) => setList(res.data));
+    axios.get("http://localhost:3333/speakers").then((res) => {
+      setListSuggestions(res.data);
+      setList(res.data);
+    });
   }
   useEffect(() => {
     fetchMembers();
@@ -78,7 +91,6 @@ function App() {
                     <Input
                       type="text"
                       placeholder="Pesquise um nome específico..."
-                      value={searchTerm}
                       onChange={handleSearchChange}
                       className="w-full transition-all duration-500 max-sm:h-12 text-sm max-sm:text-base border-2"
                     />
@@ -97,7 +109,7 @@ function App() {
             </div>
 
             {/* Exibição da lista filtrada (CustomList) */}
-            <CustomList data={list} />
+            <CustomList data={listSuggestions} />
           </section>
         </div>
       </main>

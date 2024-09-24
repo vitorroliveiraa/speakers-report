@@ -13,6 +13,10 @@ type Item = {
   name: string;
 };
 
+interface Props {
+  onMemberAdded: () => void;
+}
+
 const formSchema = z.object({
   firstSpeaker: z.object({ id: z.number(), name: z.string() }),
   secondSpeaker: z.object({ id: z.number(), name: z.string() }),
@@ -25,13 +29,12 @@ const formSchema = z.object({
 //   message: "Invalid date format",
 // }) // Verifica se a string pode ser convertida para uma data válida
 // .transform((val) => new Date(val)), // Transforma a string em Date
-const ProfileForm = ({ onMemberAdded }) => {
+const ProfileForm = ({ onMemberAdded }: Props) => {
   const [members, setMembers] = useState<Item[]>([]);
 
   useEffect(() => {
     axios.get("http://localhost:3333/church_members").then((res) => {
       setMembers(res.data);
-      console.log("members=>", res.data);
     });
   }, []);
 
@@ -41,9 +44,6 @@ const ProfileForm = ({ onMemberAdded }) => {
       sacramentMeetingDate: new Date(),
     },
   });
-
-  const { errors } = form.formState;
-  console.log("erro zod=>", errors);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const data = [
@@ -66,8 +66,7 @@ const ProfileForm = ({ onMemberAdded }) => {
 
     axios
       .post("http://localhost:3333/speakers/insert", data)
-      .then(function (response) {
-        console.log(response);
+      .then(() => {
         onMemberAdded();
       })
       .catch(function (err) {

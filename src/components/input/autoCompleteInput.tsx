@@ -36,8 +36,6 @@ const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
 
   useEffect(() => {
     if (inputText) {
-      console.log("inputText", inputText);
-
       const filteredSuggestions = data?.filter((item: { name: string }) =>
         item.name.toLowerCase().includes(inputText.toLowerCase())
       );
@@ -55,8 +53,6 @@ const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
   };
 
   const handleSuggestionClick = (suggestion: Item) => {
-    console.log("handleSuggestionClick", suggestion);
-
     setInputText(suggestion.name);
     field.onChange(suggestion);
     setTimeout(() => setSuggestions([]), 0);

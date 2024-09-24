@@ -1,13 +1,17 @@
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
 
 type Person = {
+  last_speech_date: string;
   name: string;
-  date: string;
-  sundays: number;
+  speaker_position: number;
+  sundays_since_last_speech: string;
 };
 
-export default function CustomList({ data }) {
+interface Props {
+  data: Person[];
+}
+
+export default function CustomList({ data }: Props) {
   const sortedData = [...data].sort(
     (a, b) =>
       Number(b.sundays_since_last_speech) - Number(a.sundays_since_last_speech)
