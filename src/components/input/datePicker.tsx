@@ -1,5 +1,3 @@
-"use client";
-
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import * as React from "react";
@@ -13,7 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { FormControl, FormItem, FormLabel } from "./ui/form.tsx";
+import { FormControl, FormItem, FormLabel } from "../ui/form.tsx";
 import { ControllerRenderProps, FieldError } from "react-hook-form";
 
 type Item = {
