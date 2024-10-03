@@ -8,6 +8,8 @@ import { X } from "lucide-react";
 import { Button } from "./components/ui/button.tsx";
 import axios from "axios";
 
+const URL_API = import.meta.env.VITE_URL_API;
+
 function App() {
   // Estado para controlar se o campo de pesquisa está visível
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -43,7 +45,7 @@ function App() {
   };
 
   function fetchMembers() {
-    axios.get(`${process.env.URL_API}/speakers`).then((res) => {
+    axios.get(`${URL_API}/speakers`).then((res) => {
       setListSuggestions(res.data);
       setList(res.data);
     });

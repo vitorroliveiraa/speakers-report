@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import DatePicker from "../input/datePicker.tsx";
 
+const URL_API = import.meta.env.VITE_URL_API;
+
 type Item = {
   id: number;
   name: string;
@@ -33,7 +35,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
   const [members, setMembers] = useState<Item[]>([]);
   //http://localhost:3333
   useEffect(() => {
-    axios.get(`${process.env.URL_API}/church_members`).then((res) => {
+    axios.get(`${URL_API}/church_members`).then((res) => {
       setMembers(res.data);
     });
   }, []);
@@ -65,7 +67,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
     ];
 
     axios
-      .post(`${process.env.URL_API}/speakers/insert`, data)
+      .post(`${URL_API}/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
       })
