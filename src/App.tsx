@@ -88,19 +88,19 @@ function App() {
               )}
               {/* Se a pesquisa estiver ativa, exibe o input com o botão de fechar ao lado */}
               {isSearchActive && (
-                <div className="flex items-center w-full transition-all duration-500 ease-in-out delay-1000">
+                <div className="flex items-center w-full">
                   <div className="flex-grow">
                     <Input
                       type="text"
                       placeholder="Pesquise um nome específico..."
                       onChange={handleSearchChange}
-                      className="w-full transition-all duration-500 max-sm:h-12 text-sm max-sm:text-base border-2"
+                      className="focus-visible:ring-transparent w-full max-sm:h-12 text-sm max-sm:text-base border-2"
                     />
                   </div>
                   <div className="ml-2">
                     <Button
                       variant="outline"
-                      className="hover:bg-gray-50 transition-all duration-500 max-sm:h-12 border-2"
+                      className="hover:bg-gray-50 max-sm:h-12 border-2"
                       onClick={handleCloseSearch}
                     >
                       <X className="h-6 w-6 text-slate-700" />

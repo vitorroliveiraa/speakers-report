@@ -77,7 +77,7 @@ const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
             }}
             ref={inputRef}
             placeholder="Digite um nome"
-            className="w-full pr-10 pl-10 max-sm:h-12 text-sm max-sm:text-base border-2"
+            className="focus-visible:ring-transparent w-full pr-10 pl-10 max-sm:h-12 text-sm max-sm:text-base border-2"
           ></Input>
 
           {inputText && (
