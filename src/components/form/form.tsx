@@ -31,9 +31,9 @@ const formSchema = z.object({
 // .transform((val) => new Date(val)), // Transforma a string em Date
 const ProfileForm = ({ onMemberAdded }: Props) => {
   const [members, setMembers] = useState<Item[]>([]);
-
+  //http://localhost:3333
   useEffect(() => {
-    axios.get("http://localhost:3333/church_members").then((res) => {
+    axios.get(`${process.env.URL_API}/church_members`).then((res) => {
       setMembers(res.data);
     });
   }, []);
@@ -65,7 +65,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
     ];
 
     axios
-      .post("http://localhost:3333/speakers/insert", data)
+      .post(`${process.env.URL_API}/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
       })

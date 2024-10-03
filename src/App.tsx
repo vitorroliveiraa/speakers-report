@@ -43,7 +43,7 @@ function App() {
   };
 
   function fetchMembers() {
-    axios.get("http://localhost:3333/speakers").then((res) => {
+    axios.get(`${process.env.URL_API}/speakers`).then((res) => {
       setListSuggestions(res.data);
       setList(res.data);
     });
