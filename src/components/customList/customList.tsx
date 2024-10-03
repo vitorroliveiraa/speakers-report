@@ -26,7 +26,9 @@ export default function CustomList({ data }: Props) {
         >
           <div className="flex-1">
             <h3 className="font-medium text-slate-100">
-              {person.name.split(",")[1]}
+              {person.name && person.name.includes(",")
+                ? person.name.split(",")[1]
+                : person.name}
             </h3>
           </div>
           <div className="flex-1">
