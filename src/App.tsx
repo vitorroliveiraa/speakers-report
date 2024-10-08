@@ -7,6 +7,7 @@ import { Search as SearchIcon } from "lucide-react";
 import { X } from "lucide-react";
 import { Button } from "./components/ui/button.tsx";
 import axios from "axios";
+import "dotenv";
 
 const URL_API = import.meta.env.VITE_URL_API;
 
