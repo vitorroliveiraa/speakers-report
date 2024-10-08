@@ -25,15 +25,10 @@ const formSchema = z.object({
   thirdSpeaker: z.object({ id: z.number(), name: z.string() }),
   sacramentMeetingDate: z.date(),
 });
-// sacramentMeetingDate: z
-// .string()
-// .refine((val) => !isNaN(Date.parse(val)), {
-//   message: "Invalid date format",
-// }) // Verifica se a string pode ser convertida para uma data válida
-// .transform((val) => new Date(val)), // Transforma a string em Date
+
 const ProfileForm = ({ onMemberAdded }: Props) => {
   const [members, setMembers] = useState<Item[]>([]);
-  //http://localhost:3333
+
   useEffect(() => {
     axios.get(`${URL_API}/church_members`).then((res) => {
       setMembers(res.data);
@@ -42,9 +37,6 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      sacramentMeetingDate: new Date(),
-    },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -70,11 +62,18 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       .post(`${URL_API}/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
+        form.reset({
+          firstSpeaker: { id: 0, name: "" },
+          secondSpeaker: { id: 0, name: "" },
+          thirdSpeaker: { id: 0, name: "" },
+          sacramentMeetingDate: undefined,
+        });
       })
       .catch(function (err) {
         console.log(err);
       });
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

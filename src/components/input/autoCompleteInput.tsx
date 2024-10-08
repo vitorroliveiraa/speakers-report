@@ -30,9 +30,14 @@ interface CustomInputProps {
 
 const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
   const [inputText, setInputText] = useState<string>(field.value?.name || "");
-
   const [suggestions, setSuggestions] = useState(data);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (field.value?.name === "") {
+      setInputText("");
+    }
+  }, [field.value]);
 
   useEffect(() => {
     if (inputText) {
