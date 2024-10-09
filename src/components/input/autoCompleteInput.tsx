@@ -26,9 +26,15 @@ interface CustomInputProps {
   error?: FieldError;
   data: Item[];
   position?: string;
+  onSpeakerSelect: (speaker?: Item, clearField?: string) => void;
 }
 
-const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
+const AutoCompleteInput = ({
+  label,
+  field,
+  data,
+  onSpeakerSelect,
+}: CustomInputProps) => {
   const [inputText, setInputText] = useState<string>(field.value?.name || "");
   const [suggestions, setSuggestions] = useState(data);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -45,13 +51,14 @@ const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
         item.name.toLowerCase().includes(inputText.toLowerCase())
       );
 
-      setSuggestions(filteredSuggestions); // Atualiza a lista de acordo com o pesquisado
+      setSuggestions(filteredSuggestions);
     } else {
       setSuggestions([]);
     }
   }, [inputText, data]);
 
   const clearInput = () => {
+    onSpeakerSelect(undefined, field.value?.name);
     setInputText("");
     field.onChange("");
     setSuggestions([]);
@@ -60,6 +67,7 @@ const AutoCompleteInput = ({ label, field, data }: CustomInputProps) => {
   const handleSuggestionClick = (suggestion: Item) => {
     setInputText(suggestion.name);
     field.onChange(suggestion);
+    onSpeakerSelect(suggestion);
     setTimeout(() => setSuggestions([]), 0);
   };
 
