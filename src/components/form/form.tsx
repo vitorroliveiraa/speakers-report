@@ -19,15 +19,34 @@ interface Props {
   onMemberAdded: () => void;
 }
 
-const formSchema = z.object({
-  firstSpeaker: z.object({ id: z.number(), name: z.string() }),
-  secondSpeaker: z.object({ id: z.number(), name: z.string() }),
-  thirdSpeaker: z.object({ id: z.number(), name: z.string() }),
-  sacramentMeetingDate: z.date(),
-});
+const formSchema = z
+  .object({
+    firstSpeaker: z.object({ id: z.number(), name: z.string() }),
+    secondSpeaker: z.object({ id: z.number(), name: z.string() }),
+    thirdSpeaker: z.object({ id: z.number(), name: z.string() }),
+    sacramentMeetingDate: z.date(),
+  })
+  .refine(
+    (data) =>
+      data.firstSpeaker.name !== data.secondSpeaker.name &&
+      data.firstSpeaker.name !== data.thirdSpeaker.name &&
+      data.secondSpeaker.name !== data.thirdSpeaker.name,
+    {
+      message: "Os discursantes devem ser diferentes.",
+      path: ["secondSpeaker", "thirdSpeaker"],
+    }
+  );
 
 const ProfileForm = ({ onMemberAdded }: Props) => {
   const [members, setMembers] = useState<Item[]>([]);
+  const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
+
+  const handleSpeakerSelect = (speaker?: Item, clearField?: string) => {
+    if (speaker)
+      setSelectedSpeakers((prevSelected) => [...prevSelected, speaker?.name]);
+    if (clearField)
+      setSelectedSpeakers(selectedSpeakers.filter((x) => x != clearField));
+  };
 
   useEffect(() => {
     axios.get(`${URL_API}/church_members`).then((res) => {
@@ -94,7 +113,10 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                 label="1° Discursante"
                 field={field}
                 error={fieldState.error}
-                data={members}
+                data={members.filter(
+                  (member) => !selectedSpeakers.includes(member.name)
+                )}
+                onSpeakerSelect={handleSpeakerSelect}
               />
             )}
           />
@@ -107,7 +129,10 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                 label="2° Discursante"
                 field={field}
                 error={fieldState.error}
-                data={members}
+                data={members.filter(
+                  (member) => !selectedSpeakers.includes(member.name)
+                )}
+                onSpeakerSelect={handleSpeakerSelect}
               />
             )}
           />
@@ -120,7 +145,10 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                 label="3° Discursante"
                 field={field}
                 error={fieldState.error}
-                data={members}
+                data={members.filter(
+                  (member) => !selectedSpeakers.includes(member.name)
+                )}
+                onSpeakerSelect={handleSpeakerSelect}
               />
             )}
           />
