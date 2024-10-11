@@ -50,8 +50,8 @@ export default function DatePicker({ label, field }: AutoCompleteInputProps) {
                 )}
               >
                 <CalendarIcon className="mr-2 size-4 max-sm:size-4" />
-                {selectedDate ? (
-                  format(selectedDate, "dd/MM/yyyy", { locale: ptBR })
+                {field.value ? (
+                  format(field.value, "dd/MM/yyyy", { locale: ptBR })
                 ) : (
                   <span>Selecione uma data</span>
                 )}
