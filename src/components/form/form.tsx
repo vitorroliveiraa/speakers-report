@@ -77,26 +77,26 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
   }, [viewAlert]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const speakers = [
-      {
-        sacrament_meeting_date: values.sacramentMeetingDate,
-        member_id: values.firstSpeaker.id,
-        speaker_position: 1,
-      },
-      {
-        sacrament_meeting_date: values.sacramentMeetingDate,
-        member_id: values.secondSpeaker.id,
-        speaker_position: 2,
-      },
-      {
-        sacrament_meeting_date: values.sacramentMeetingDate,
-        member_id: values.thirdSpeaker.id,
-        speaker_position: 3,
-      },
-    ];
+    const data = {
+      sacrament_meeting_date: values.sacramentMeetingDate,
+      speakers: [
+        {
+          member_id: values.firstSpeaker.id,
+          speaker_position: 1,
+        },
+        {
+          member_id: values.secondSpeaker.id,
+          speaker_position: 2,
+        },
+        {
+          member_id: values.thirdSpeaker.id,
+          speaker_position: 3,
+        },
+      ],
+    };
 
     axios
-      .post(`${URL_API}/speakers/insert`, { speakers })
+      .post(`${URL_API}/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
         form.reset({
