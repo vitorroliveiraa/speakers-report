@@ -9,6 +9,7 @@ import axios from "axios";
 import DatePicker from "../input/datePicker.tsx";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert.tsx";
 import { CircleAlert } from "lucide-react";
+import { formSchema } from "../../validation/formSchema.tsx";
 
 const URL_API = import.meta.env.VITE_URL_API;
 
@@ -20,24 +21,6 @@ type Item = {
 interface Props {
   onMemberAdded: () => void;
 }
-
-const formSchema = z
-  .object({
-    firstSpeaker: z.object({ id: z.number(), name: z.string() }),
-    secondSpeaker: z.object({ id: z.number(), name: z.string() }),
-    thirdSpeaker: z.object({ id: z.number(), name: z.string() }),
-    sacramentMeetingDate: z.date(),
-  })
-  .refine(
-    (data) =>
-      data.firstSpeaker.name !== data.secondSpeaker.name &&
-      data.firstSpeaker.name !== data.thirdSpeaker.name &&
-      data.secondSpeaker.name !== data.thirdSpeaker.name,
-    {
-      message: "Os discursantes devem ser diferentes.",
-      path: ["secondSpeaker", "thirdSpeaker"],
-    }
-  );
 
 const ProfileForm = ({ onMemberAdded }: Props) => {
   const [members, setMembers] = useState<Item[]>([]);
@@ -62,9 +45,6 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
     resolver: zodResolver(formSchema),
   });
 
-  const { errors } = form.formState;
-  console.log("ZOD", errors);
-
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (viewAlert) {
@@ -81,15 +61,15 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       sacrament_meeting_date: values.sacramentMeetingDate,
       speakers: [
         {
-          member_id: values.firstSpeaker.id,
+          member_id: values.firstSpeaker,
           speaker_position: 1,
         },
         {
-          member_id: values.secondSpeaker.id,
+          member_id: values.secondSpeaker,
           speaker_position: 2,
         },
         {
-          member_id: values.thirdSpeaker.id,
+          member_id: values.thirdSpeaker,
           speaker_position: 3,
         },
       ],
@@ -99,12 +79,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       .post(`${URL_API}/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
-        form.reset({
-          firstSpeaker: { id: 0, name: "" },
-          secondSpeaker: { id: 0, name: "" },
-          thirdSpeaker: { id: 0, name: "" },
-          sacramentMeetingDate: undefined,
-        });
+        form.reset();
       })
       .catch(function (err) {
         setViewAlert(true);
@@ -120,8 +95,12 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
             <FormField
               control={form.control}
               name="sacramentMeetingDate"
-              render={({ field }) => (
-                <DatePicker label="Data da reunião" field={field} />
+              render={({ field, fieldState }) => (
+                <DatePicker
+                  label="Data da reunião"
+                  field={field}
+                  error={fieldState.error}
+                />
               )}
             />
 

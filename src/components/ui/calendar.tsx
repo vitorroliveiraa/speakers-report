@@ -80,7 +80,7 @@ function Calendar({
         day: "p-0 size-8 text-sm flex-1 flex items-center justify-center has-[button]:hover:!bg-accent rounded-md has-[button]:hover:aria-selected:!bg-primary has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
-          "size-8 p-0 font-normal transition-none hover:bg-slate-200 hover:text-black aria-selected:opacity-100"
+          "size-8 p-0 font-normal transition-none hover:bg-slate-950 hover:text-white aria-selected:opacity-100"
         ),
         range_start: "day-range-start rounded-s-md",
         range_end: "day-range-end rounded-e-md",
