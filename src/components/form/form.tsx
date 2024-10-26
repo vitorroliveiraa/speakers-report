@@ -79,12 +79,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       .post(`${URL_API}/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
-        form.reset({
-          firstSpeaker: 0,
-          secondSpeaker: 0,
-          thirdSpeaker: 0,
-          sacramentMeetingDate: "",
-        });
+        form.reset();
       })
       .catch(function (err) {
         setViewAlert(true);
@@ -100,8 +95,12 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
             <FormField
               control={form.control}
               name="sacramentMeetingDate"
-              render={({ field }) => (
-                <DatePicker label="Data da reunião" field={field} />
+              render={({ field, fieldState }) => (
+                <DatePicker
+                  label="Data da reunião"
+                  field={field}
+                  error={fieldState.error}
+                />
               )}
             />
 

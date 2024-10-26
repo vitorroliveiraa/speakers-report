@@ -68,7 +68,7 @@ const AutoCompleteInput = <
 
   const handleSuggestionClick = (suggestion: Item) => {
     setInputText(suggestion.name);
-    field.onChange(suggestion);
+    field.onChange(suggestion.id);
     onSpeakerSelect(suggestion);
     setTimeout(() => setSuggestions([]), 0);
   };
@@ -92,9 +92,10 @@ const AutoCompleteInput = <
             }}
             ref={inputRef}
             placeholder="Digite um nome"
-            className="focus-visible:ring-transparent w-full pr-10 pl-10 max-sm:h-12 text-sm max-sm:text-base border-2"
-          ></Input>
-          {/* {error && <span className="text-red-500">{error.message}</span>} */}
+            className={`focus-visible:ring-transparent w-full pr-10 pl-10 max-sm:h-12 text-sm max-sm:text-base border-2 ${
+              error?.message && "border-red-500"
+            }`}
+          />
 
           {inputText && (
             <button
