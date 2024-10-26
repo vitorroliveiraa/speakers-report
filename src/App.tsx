@@ -12,27 +12,19 @@ import "dotenv";
 const URL_API = import.meta.env.VITE_URL_API;
 
 function App() {
-  // Estado para controlar se o campo de pesquisa está visível
   const [isSearchActive, setIsSearchActive] = useState(false);
-  //   const [searchTerm, setSearchTerm] = useState("");
   const [list, setList] = useState([]);
   const [listSuggestions, setListSuggestions] = useState([]);
 
-  // Função para abrir o input de pesquisa
   const handleSearchClick = () => {
-    setIsSearchActive(true); // Mostra o input
+    setIsSearchActive(true);
   };
 
-  // Função para fechar o input de pesquisa
   const handleCloseSearch = () => {
-    setIsSearchActive(false); // Esconde o input
-    // setSearchTerm(""); // Limpa o campo de pesquisa
+    setIsSearchActive(false);
   };
 
-  // Função para capturar o valor digitado no input
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // setSearchTerm(e.target.value);
-
     const search = e.target.value;
     if (search !== "") {
       const filteredSuggestions = list?.filter((item: { name: string }) =>
@@ -56,7 +48,6 @@ function App() {
   }, []);
 
   const handleNewMemberAdded = () => {
-    // Atualiza a lista após a inserção de um novo membro
     fetchMembers();
   };
 
@@ -75,7 +66,6 @@ function App() {
                 )}
               </div>
 
-              {/* Se a pesquisa não estiver ativa, exibe o ícone de pesquisa */}
               {!isSearchActive && (
                 <div className="transition-opacity duration-500 ease-in-out opacity-100">
                   <Button
@@ -87,7 +77,6 @@ function App() {
                   </Button>
                 </div>
               )}
-              {/* Se a pesquisa estiver ativa, exibe o input com o botão de fechar ao lado */}
               {isSearchActive && (
                 <div className="flex items-center w-full">
                   <div className="flex-grow">
@@ -111,7 +100,6 @@ function App() {
               )}
             </div>
 
-            {/* Exibição da lista filtrada (CustomList) */}
             <CustomList data={listSuggestions} />
           </section>
         </div>
