@@ -7,9 +7,9 @@ import "dotenv/config";
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
+    alias: [{
+     find: "@", replacement: path.resolve(__dirname, "./src"),
+    },]
   },
   build: {
     sourcemap: true,
