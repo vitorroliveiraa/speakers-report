@@ -11,28 +11,27 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { FormControl, FormItem, FormLabel } from "../ui/form.tsx";
-import { ControllerRenderProps, FieldError } from "react-hook-form";
+import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form.tsx";
+import {
+  ControllerRenderProps,
+  FieldError,
+  FieldPath,
+  FieldValues,
+} from "react-hook-form";
 
-type Item = {
-  id: number;
-  name: string;
-};
-
-interface FormFields {
-  firstSpeaker: Item;
-  secondSpeaker: Item;
-  thirdSpeaker: Item;
-  sacramentMeetingDate: Date;
-}
-
-interface AutoCompleteInputProps {
+interface AutoCompleteInputProps<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+> {
   label: string;
-  field: ControllerRenderProps<FormFields, "sacramentMeetingDate">;
+  field: ControllerRenderProps<TFieldValues, TName>;
   error?: FieldError;
 }
 
-export default function DatePicker({ label, field }: AutoCompleteInputProps) {
+export default function DatePicker<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+>({ label, field, error }: AutoCompleteInputProps<TFieldValues, TName>) {
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>();
 
   return (
@@ -46,12 +45,13 @@ export default function DatePicker({ label, field }: AutoCompleteInputProps) {
                 variant={"outline"}
                 className={cn(
                   "w-full justify-start text-left font-normal max-sm:h-12 text-sm max-sm:text-base border-2",
-                  !field.value && "text-muted-foreground"
+                  !field.value && "text-muted-foreground",
+                  error?.message && "border-red-500"
                 )}
               >
                 <CalendarIcon className="mr-2 size-4 max-sm:size-4" />
-                {selectedDate ? (
-                  format(selectedDate, "dd/MM/yyyy", { locale: ptBR })
+                {field.value ? (
+                  format(field.value, "dd/MM/yyyy", { locale: ptBR })
                 ) : (
                   <span>Selecione uma data</span>
                 )}
@@ -66,6 +66,7 @@ export default function DatePicker({ label, field }: AutoCompleteInputProps) {
                   setSelectedDate(date);
                 }}
                 autoFocus
+                showOutsideDays={true}
                 defaultMonth={new Date()}
                 startMonth={new Date(1999, 11)}
                 endMonth={new Date(2025, 2)}
@@ -76,6 +77,7 @@ export default function DatePicker({ label, field }: AutoCompleteInputProps) {
           </Popover>
         </div>
       </FormControl>
+      <FormMessage className="text-red-500">{error?.message}</FormMessage>
     </FormItem>
   );
 }
