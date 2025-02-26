@@ -11,7 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert.tsx";
 import { CircleAlert } from "lucide-react";
 import { formSchema } from "../../validation/formSchema.tsx";
 
-const URL_API = import.meta.env.VITE_URL_API;
+const URL_API = import.meta.env.VITE_URL_API
 
 type Item = {
   id: number;
@@ -112,7 +112,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                   label="1° Discursante"
                   field={field}
                   error={fieldState.error}
-                  data={members.filter(
+                  data={members?.filter(
                     (member) => !selectedSpeakers.includes(member.name)
                   )}
                   onSpeakerSelect={handleSpeakerSelect}
@@ -128,7 +128,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                   label="2° Discursante"
                   field={field}
                   error={fieldState.error}
-                  data={members.filter(
+                  data={members?.filter(
                     (member) => !selectedSpeakers.includes(member.name)
                   )}
                   onSpeakerSelect={handleSpeakerSelect}
@@ -144,7 +144,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                   label="3° Discursante"
                   field={field}
                   error={fieldState.error}
-                  data={members.filter(
+                  data={members?.filter(
                     (member) => !selectedSpeakers.includes(member.name)
                   )}
                   onSpeakerSelect={handleSpeakerSelect}
