@@ -1,17 +1,15 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormField } from "../ui/form.tsx";
-import { Button } from "../ui/button.tsx";
-import AutoCompleteInput from "../input/autoCompleteInput.tsx";
+import { Form, FormField } from "../../../../components/ui/form.tsx";
+import { Button } from "../../../../components/ui/button.tsx";
+import AutoCompleteInput from "../../../../components/input/autoCompleteInput.tsx";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import DatePicker from "../input/datePicker.tsx";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert.tsx";
+import DatePicker from "../../../../components/input/datePicker.tsx";
+import { Alert, AlertDescription, AlertTitle } from "../../../../components/ui/alert.tsx";
 import { CircleAlert } from "lucide-react";
-import { formSchema } from "../../validation/formSchema.tsx";
-
-const URL_API = import.meta.env.VITE_URL_API
+import { formSchema } from "../../../../validation/formSchema.tsx";
+import api from "@/api.ts";
 
 type Item = {
   id: number;
@@ -36,7 +34,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
   };
 
   useEffect(() => {
-    axios.get(`${URL_API}/church_members`).then((res) => {
+    api.get(`/church_members`).then((res) => {
       setMembers(res.data);
     });
   }, []);
@@ -75,8 +73,8 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       ],
     };
 
-    axios
-      .post(`${URL_API}/speakers/insert`, data)
+    api
+      .post(`/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
         form.reset();

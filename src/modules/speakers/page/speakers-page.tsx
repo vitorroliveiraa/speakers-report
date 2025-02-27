@@ -1,11 +1,11 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
-import ProfileForm from "../../../components/form/form";
+import ProfileForm from "../components/form/form";
 import React from "react";
 import { Button } from "../../../components/ui/button";
 import { SearchIcon, X } from "lucide-react";
 import { Input } from "../../../components/ui/input";
-import CustomList from "../../../components/customList/customList";
+import CustomList from "../components/customList/customList";
 
 const SpeakersPage = ()=>{
     const URL_API = import.meta.env.VITE_URL_API;
