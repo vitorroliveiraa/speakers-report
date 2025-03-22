@@ -29,8 +29,8 @@ export default function LoginForm() {
     api.post('/auth/login', values).
     then((response)=>{
       if(response.status===200){
-        setLegacyCookies(response.data)
-        navigate('/')
+        setLegacyCookies({accessToken: response.data.token, refreshToken:""})
+        navigate('/speakers')
       }
 
     }).catch((error)=>{console.log(error)})
