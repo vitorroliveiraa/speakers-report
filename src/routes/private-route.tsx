@@ -11,7 +11,7 @@ const PrivateRoutes = () => {
       var decodedToken= jwtDecode(token);
     var dateNow = new Date();
 
-    if(!decodedToken.exp || decodedToken.exp < dateNow.getTime())
+    if(!decodedToken.exp || decodedToken.exp < dateNow.getTime() / 1000)
         isExpired = true;
     }
     
