@@ -3,10 +3,11 @@ import {createBrowserRouter, RouterProvider} from  'react-router-dom'
 import MainLayout from '../layouts/main-layout'
 import SpeakersPage from '../modules/speakers/page/speakers-page'
 import LoginPage from '@/modules/login/pages/login-page'
+import PrivateRoutes from './private-route'
 const router = createBrowserRouter([
     {
         path:'',
-        element: <MainLayout/>,
+        element: <PrivateRoutes/>,
         children: [
             {path:'speakers',
                 element:<SpeakersPage/>
