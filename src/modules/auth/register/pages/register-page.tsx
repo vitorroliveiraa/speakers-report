@@ -66,8 +66,8 @@ role:'',
     <div className="flex flex-col items-center">
        <div className="container max-w-3xl py-10">
       <Card>
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Cadastre-se</CardTitle>
+        <CardHeader className="space-y-1 items-center">
+          <CardTitle className="text-2xl font-bold ">Cadastre-se</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
@@ -188,7 +188,7 @@ role:'',
             <Button variant="outline" type="button" onClick={() => navigate('/login')}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" variant="destructive" disabled={isLoading}>
               {isLoading ? (
                 <span className="flex items-center">Processando...</span>
               ) : (
