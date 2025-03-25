@@ -91,7 +91,7 @@ export default function LoginForm() {
             <div className="text-center text-sm">
               Não possui uma conta?{" "}
               
-              <Button variant="link">Cadastre-se</Button>
+              <Button onClick={()=>navigate('/register')}>Cadastre-se</Button>
             </div>
           </CardFooter>
           </form>

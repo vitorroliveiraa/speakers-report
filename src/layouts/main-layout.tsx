@@ -15,13 +15,14 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Outlet } from "react-router"
+import { getCurrentUserLocal } from "@/utils/handle_cookies"
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Discursantes", href: "/speakers", icon: BarChart },
-  { name: "Users", href: "/users", icon: Users },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Discursantes", href: "/speakers", icon: BarChart }
 ]
+
+const dados = getCurrentUserLocal()
 
 export function MainLayout() {
   return (
@@ -52,13 +53,9 @@ export function MainLayout() {
           </SidebarContent>
           <SidebarFooter className="border-t p-4">
             <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
               <div className="flex flex-col">
-                <span className="text-sm font-medium">User Name</span>
-                <span className="text-xs text-muted-foreground">user@example.com</span>
+                <span className="text-sm font-medium">{dados?.name}</span>
+                <span className="text-xs text-muted-foreground">{dados?.email}</span>
               </div>
             </div>
           </SidebarFooter>

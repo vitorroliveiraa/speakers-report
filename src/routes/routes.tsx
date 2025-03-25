@@ -2,8 +2,9 @@ import React from 'react'
 import {createBrowserRouter, RouterProvider} from  'react-router-dom'
 import MainLayout from '../layouts/main-layout'
 import SpeakersPage from '../modules/speakers/page/speakers-page'
-import LoginPage from '@/modules/login/pages/login-page'
 import PrivateRoutes from './private-route'
+import RegisterPage from '@/modules/auth/register/pages/register-page'
+import LoginPage from '@/modules/auth/login/pages/login-page'
 const router = createBrowserRouter([
     {
         path:'',
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
     {
         path:'/login',
         element: <LoginPage/>
+    },
+    {
+        path:'/register',
+        element: <RegisterPage/>
     }
 ])
 

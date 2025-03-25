@@ -18,9 +18,8 @@ interface Tokens {
     const cookie = Cookies.get('_uac_us')
     const cookieRefresh = Cookies.get('_uac_us_r')
   
-    if (cookie && cookieRefresh) {
+    if (cookie) {
       const { token } = JSON.parse(cookie)
-      const { refreshToken } = JSON.parse(cookieRefresh)
   
       const decodedToken: any = jwtDecode(token)
   
@@ -28,7 +27,6 @@ interface Tokens {
         email: decodedToken?.email,
         id: decodedToken?.user_id,
         name: decodedToken?.name,
-        refreshToken,
         token,
         role: decodedToken?.role,
         ward_id:
