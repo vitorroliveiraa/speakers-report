@@ -13,10 +13,10 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Outlet } from "react-router"
-import { getCurrentUserLocal } from "@/utils/handle_cookies"
+import { Outlet, useNavigate } from "react-router"
+import { clearLegacyCookies, getCurrentUserLocal } from "@/utils/handle_cookies"
 import { Toaster } from "@/components/ui/toaster"
+import { Button } from "@/components/ui/button"
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
@@ -26,6 +26,13 @@ const navigationItems = [
 const dados = getCurrentUserLocal()
 
 export function MainLayout() {
+
+
+const navigate = useNavigate()
+const handleLogout = ()=>{
+  clearLegacyCookies();
+  navigate('/login')
+}
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
@@ -59,6 +66,7 @@ export function MainLayout() {
                 <span className="text-xs text-muted-foreground">{dados?.email}</span>
               </div>
             </div>
+            <Button variant="link" onClick={handleLogout}>Sair</Button>
           </SidebarFooter>
           <SidebarRail />
         </Sidebar>

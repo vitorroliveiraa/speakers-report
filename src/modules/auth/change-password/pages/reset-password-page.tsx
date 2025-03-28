@@ -10,12 +10,12 @@ import { useMutation } from '@tanstack/react-query'
 
 const ResetPasswordPage = ()=>{
     const navigate = useNavigate()
-    const params = useParams()
     const [newPass,setNewPass] = useState<string>();
-    
+    const query = new URLSearchParams(window.location.search);
+
     const mutation = useMutation({
         mutationFn: () => {
-          return api.post('/auth/reset-password',{newPassword:newPass,token :  params.token})
+          return api.post('/auth/reset-password',{newPassword:newPass,token : query.get('token')})
         },
         onSuccess: (data, variables, context) => {
           if(data.status===200)
@@ -36,7 +36,6 @@ const ResetPasswordPage = ()=>{
                                 id="reset"
                                 value={newPass}
                                 onChange={(e) => setNewPass(e.target.value)}
-                                required
                               />
                               </div>
                               <div>
