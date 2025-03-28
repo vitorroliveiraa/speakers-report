@@ -5,7 +5,7 @@ import SpeakersPage from '../modules/speakers/page/speakers-page'
 import PrivateRoutes from './private-route'
 import RegisterPage from '@/modules/auth/register/pages/register-page'
 import LoginPage from '@/modules/auth/login/pages/login-page'
-import ConfirmEmailPage from '@/modules/auth/confirm-email/pages/confirm-email-page'
+import ForgotPasswordPage from '@/modules/auth/forgot-password/pages/pages/forgot-password-page'
 const router = createBrowserRouter([
     {
         path:'',
@@ -25,8 +25,8 @@ const router = createBrowserRouter([
         element: <RegisterPage/>
     },
     {
-        path:'/confirm-email',
-        element:<ConfirmEmailPage/>
+        path:'/forgot-password',
+        element:<ForgotPasswordPage/>
     }
 ])
 

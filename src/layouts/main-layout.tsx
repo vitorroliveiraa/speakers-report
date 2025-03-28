@@ -16,6 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Outlet } from "react-router"
 import { getCurrentUserLocal } from "@/utils/handle_cookies"
+import { Toaster } from "@/components/ui/toaster"
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
@@ -66,6 +67,7 @@ export function MainLayout() {
             <SidebarTrigger className="mr-4" />
           </header>
           <main className="flex-1 p-6">
+          <Toaster />
             <Outlet/>
           </main>
         </SidebarInset>

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Save } from "lucide-react"
-import { IRegisterUser } from "../hooks/register-hook"
+import { IRegisterUser } from "../interfaces/register-hook"
 import { useNavigate } from "react-router"
 import api from "@/api"
 
@@ -53,7 +53,7 @@ role:'',
       await api.post('/users',formData)
       .then((response)=>{
         if(response.status===200)
-          navigate("/confirm-email")
+          navigate("/login")
       })
     } catch (error) {
       console.error("Registration error:", error)
@@ -186,7 +186,7 @@ role:'',
 
           <CardFooter className="flex justify-between">
             <Button variant="outline" type="button" onClick={() => navigate('/login')}>
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" variant="destructive" disabled={isLoading}>
               {isLoading ? (

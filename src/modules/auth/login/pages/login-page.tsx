@@ -66,7 +66,7 @@ export default function LoginForm() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Senha</Label>
-                <Button variant="link">Esqueci minha senha</Button>
+                <Button variant="link" onClick={()=> navigate('/forgot-password')}>Esqueci minha senha</Button>
               </div>
         <FormField
           control={form.control}
