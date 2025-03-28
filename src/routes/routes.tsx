@@ -6,6 +6,7 @@ import PrivateRoutes from './private-route'
 import RegisterPage from '@/modules/auth/register/pages/register-page'
 import LoginPage from '@/modules/auth/login/pages/login-page'
 import ForgotPasswordPage from '@/modules/auth/forgot-password/pages/pages/forgot-password-page'
+import ResetPasswordPage from '@/modules/auth/change-password/pages/reset-password-page'
 const router = createBrowserRouter([
     {
         path:'',
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     {
         path:'/forgot-password',
         element:<ForgotPasswordPage/>
+    },
+    {
+        path:'/reset-password',
+        element:<ResetPasswordPage/>
     }
 ])
 
