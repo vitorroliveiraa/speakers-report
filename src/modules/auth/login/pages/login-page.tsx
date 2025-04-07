@@ -12,6 +12,7 @@ import { FormField, FormItem } from "@/components/ui/form"
 import api from "@/api"
 import { setLegacyCookies } from "@/utils/handle_cookies"
 import { useNavigate } from "react-router"
+import { useMutation } from "@tanstack/react-query"
 
 export default function LoginForm() {
   const navigate= useNavigate()
@@ -23,17 +24,22 @@ export default function LoginForm() {
       password:"",
     },
   })
- 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    api.post('/auth/login', values).
-    then((response)=>{
-      if(response.status===200){
-        setLegacyCookies({accessToken: response.data.token, refreshToken:""})
+
+  const mutation = useMutation({
+    mutationFn: (values: z.infer<typeof loginSchema>) => {
+      return api.post('/auth/login',values)
+    },
+    onSuccess: (data, variables, context) => {
+      if(data.status===200 ){
+        setLegacyCookies({accessToken: data.data.token, refreshToken:""})
         navigate('/speakers')
       }
+    },
+  })
 
-    }).catch((error)=>{console.log(error)})
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof loginSchema>) {
+    mutation.mutate(values)
   }
 
   return (
@@ -83,9 +89,15 @@ export default function LoginForm() {
                )}
                />
             </div>
+            {mutation.isError &&
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-red-700">{mutation.error?.response.data.message}</label>
+                </div>
+              </div>}
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit"  className="w-full">
+            <Button type="submit"  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Entrar
             </Button>
             <div className="text-center text-sm">

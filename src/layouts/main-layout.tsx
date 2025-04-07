@@ -35,7 +35,7 @@ const handleLogout = ()=>{
 }
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full">
         <Sidebar>
           <SidebarHeader className="border-b p-4">
             <div className="flex items-center gap-2">

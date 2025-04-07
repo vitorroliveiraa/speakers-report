@@ -11,10 +11,11 @@ import { Save } from "lucide-react"
 import { IRegisterUser } from "../interfaces/register-hook"
 import { useNavigate } from "react-router"
 import api from "@/api"
+import { useMutation } from "@tanstack/react-query"
 
 export default function RegisterPage() {
     const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
+    const [errorPass,setErrorPass]= useState<bool>(false)
 
   // Form data with default values from the provided JSON
   const [formData, setFormData] = useState<IRegisterUser | undefined>({
@@ -35,6 +36,7 @@ role:'',
   console.log(formData)
 
   const handleChange = (section: "wardData" | "userData", field: string, value: string) => {
+
     //@ts-ignore
     setFormData({
       ...formData,
@@ -43,23 +45,27 @@ role:'',
         [field]: value,
       },
     })
+    let regex = /[A-Za-z]+\d/i;
+    if(field == "password"){
+      if(field.length<=6 || !regex.test(value)){
+        setErrorPass(true)
+        return;
+    }
   }
-
+  setErrorPass(false);
+  }
+  const mutation = useMutation({
+    mutationFn: () => {
+      return api.post('/users',formData)
+    },
+    onSuccess: (data, variables, context) => {
+      if(data.status===200 )
+        navigate('/Login')
+    },
+  })
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-
-    try {
-      await api.post('/users',formData)
-      .then((response)=>{
-        if(response.status===200)
-          navigate("/login")
-      })
-    } catch (error) {
-      console.error("Registration error:", error)
-    } finally {
-      setIsLoading(false)
-    }
+    mutation.mutate();
   }
 
   return (
@@ -169,6 +175,7 @@ role:'',
                     onChange={(e) => handleChange("userData", "password", e.target.value)}
                     required
                   />
+                  <label className={errorPass?"text-sm text-red-700": "text-sm"}>*A senha deve conter ao menos 6 caracteres, uma letra e um número</label>
                 </div>
 
                 <div className="space-y-2">
@@ -188,8 +195,8 @@ role:'',
             <Button variant="outline" type="button" onClick={() => navigate('/login')}>
               Cancelar
             </Button>
-            <Button type="submit" variant="destructive" disabled={isLoading}>
-              {isLoading ? (
+            <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" disabled={mutation.isPending}>
+              {mutation.isPending ? (
                 <span className="flex items-center">Processando...</span>
               ) : (
                 <span className="flex items-center">

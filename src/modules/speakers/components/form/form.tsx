@@ -9,7 +9,7 @@ import DatePicker from "../../../../components/input/datePicker.tsx";
 import { Alert, AlertDescription, AlertTitle } from "../../../../components/ui/alert.tsx";
 import { CircleAlert } from "lucide-react";
 import { formSchema } from "../../../../validation/formSchema.tsx";
-import api from "@/api.ts";
+import api_sem_v1 from "@/api_sem_v1.ts";
 
 type Item = {
   id: number;
@@ -34,7 +34,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
   };
 
   useEffect(() => {
-    api.get(`/church_members`).then((res) => {
+    api_sem_v1.get(`/church_members`).then((res) => {
       setMembers(res.data);
     });
   }, []);
@@ -73,7 +73,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       ],
     };
 
-    api
+    api_sem_v1
       .post(`/speakers/insert`, data)
       .then(() => {
         onMemberAdded();

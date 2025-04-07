@@ -6,10 +6,9 @@ import { Button } from "../../../components/ui/button";
 import { SearchIcon, X } from "lucide-react";
 import { Input } from "../../../components/ui/input";
 import CustomList from "../components/customList/customList";
+import api_sem_v1 from "@/api_sem_v1";
 
-const SpeakersPage = ()=>{
-    const URL_API = import.meta.env.VITE_URL_API;
-    
+const SpeakersPage = ()=>{    
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [list, setList] = useState([]);
     const [listSuggestions, setListSuggestions] = useState([]);
@@ -36,7 +35,7 @@ const SpeakersPage = ()=>{
     };
   
     function fetchMembers() {
-      axios.get(`${URL_API}/speakers`).then((res) => {
+      api_sem_v1.get(`speakers`).then((res) => {
         setListSuggestions(res.data);
         setList(res.data);
       });
