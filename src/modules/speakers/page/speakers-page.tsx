@@ -6,7 +6,7 @@ import { Button } from "../../../components/ui/button";
 import { SearchIcon, X } from "lucide-react";
 import { Input } from "../../../components/ui/input";
 import CustomList from "../components/customList/customList";
-import api_sem_v1 from "@/api_sem_v1";
+import api from "@/api";
 
 const SpeakersPage = ()=>{    
     const [isSearchActive, setIsSearchActive] = useState(false);
@@ -30,12 +30,12 @@ const SpeakersPage = ()=>{
   
         setListSuggestions(filteredSuggestions);
       } else {
-        setListSuggestions(list);
+        setListSuggestions(list); 
       }
     };
   
     function fetchMembers() {
-      api_sem_v1.get(`speakers`).then((res) => {
+      api.get(`speakers`).then((res) => {
         setListSuggestions(res.data);
         setList(res.data);
       });

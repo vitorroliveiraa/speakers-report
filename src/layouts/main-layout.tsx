@@ -20,7 +20,8 @@ import { Button } from "@/components/ui/button"
 
 const navigationItems = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Discursantes", href: "/speakers", icon: BarChart }
+  { name: "Discursantes", href: "/speakers", icon: BarChart },
+  { name: "Importação de membros", href:"church-members/import", icon:Users}
 ]
 
 const dados = getCurrentUserLocal()

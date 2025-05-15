@@ -7,6 +7,7 @@ import RegisterPage from '@/modules/auth/register/pages/register-page'
 import LoginPage from '@/modules/auth/login/pages/login-page'
 import ForgotPasswordPage from '@/modules/auth/forgot-password/pages/pages/forgot-password-page'
 import ResetPasswordPage from '@/modules/auth/change-password/pages/reset-password-page'
+import ImportChurchMemberPage from '@/modules/church-members/import/import-page'
 const router = createBrowserRouter([
     {
         path:'',
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
         children: [
             {path:'speakers',
                 element:<SpeakersPage/>
+            },
+            {
+                path:'church-members/import',
+                element:<ImportChurchMemberPage/>
             }
         ],
     },

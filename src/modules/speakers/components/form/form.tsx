@@ -9,7 +9,7 @@ import DatePicker from "../../../../components/input/datePicker.tsx";
 import { Alert, AlertDescription, AlertTitle } from "../../../../components/ui/alert.tsx";
 import { CircleAlert } from "lucide-react";
 import { formSchema } from "../../../../validation/formSchema.tsx";
-import api_sem_v1 from "@/api_sem_v1.ts";
+import api from "@/api.ts";
 
 type Item = {
   id: number;
@@ -34,7 +34,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
   };
 
   useEffect(() => {
-    api_sem_v1.get(`/church_members`).then((res) => {
+    api.get(`/church_members`).then((res) => {
       setMembers(res.data);
     });
   }, []);
@@ -73,7 +73,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       ],
     };
 
-    api_sem_v1
+    api
       .post(`/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
@@ -153,7 +153,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <Button
               type="submit"
-              className="max-sm:h-12 bg-slate-500 hover:bg-slate-600"
+              className="max-sm:h-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Cadastrar
             </Button>
