@@ -1,17 +1,19 @@
 export interface IRegisterUser {
-wardData: IWard,
-userData: IUserCreation
+  wardData: IWard;
+  userData: IUserCreation;
 }
-interface IWard{
-    name:string,
-    city:string,
-    state:string,
-    country:string
+interface IWard {
+  name: string;
+  city: string;
+  state: string;
+  country: string;
+  id: number | null;
+  unitNumber: string;
 }
-interface IUserCreation{
-    name:string,
-    role:string,
-    email:string,
-    password:string,
-    member_number:string
+interface IUserCreation {
+  name: string;
+  role: string;
+  email: string;
+  password: string;
+  member_number: string;
 }
