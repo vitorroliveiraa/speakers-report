@@ -1,215 +1,364 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Save } from "lucide-react"
-import { IRegisterUser } from "../interfaces/register-hook"
-import { useNavigate } from "react-router"
-import api from "@/api"
-import { useMutation } from "@tanstack/react-query"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Save } from "lucide-react";
+import { useNavigate } from "react-router";
+import api from "@/api";
+import { useMutation } from "@tanstack/react-query";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { InputButton } from "../components/inputButton.tsx";
+import { useGetWard } from "../hooks/useRegister.ts";
+import { useEffect } from "react";
+
+// Schema de validação
+const formSchema = z.object({
+  wardData: z.object({
+    id: z.number().optional(),
+    unitNumber: z.string().min(1, "Número da ala é obrigatório"),
+    name: z.string().min(1, "Nome da ala é obrigatório"),
+    city: z.string().min(1, "Cidade é obrigatória"),
+    state: z.string().min(1, "Estado é obrigatório"),
+    country: z.string().min(1, "País é obrigatório"),
+  }),
+  userData: z.object({
+    name: z.string().min(1, "Nome é obrigatório"),
+    email: z.string().email("Email inválido"),
+    password: z
+      .string()
+      .min(6, "Senha deve ter pelo menos 6 caracteres")
+      .regex(/[A-Za-z]/, "Senha deve conter pelo menos uma letra")
+      .regex(/\d/, "Senha deve conter pelo menos um número"),
+    member_number: z.string().min(1, "Número de membro é obrigatório"),
+    role: z.string().min(1, "Chamado é obrigatório"),
+  }),
+});
 
 export default function RegisterPage() {
-    const navigate = useNavigate()
-    const [errorPass,setErrorPass]= useState<bool>(false)
-
-  // Form data with default values from the provided JSON
-  const [formData, setFormData] = useState<IRegisterUser | undefined>({
-    userData:{
-      name:'',
-email:'',
-password:'',
-member_number:'',
-role:'',
-  },
-  wardData:{
-    city:'',
-    country:'',
-    name:'',
-    state:'',
-  }
-  })
-  console.log(formData)
-
-  const handleChange = (section: "wardData" | "userData", field: string, value: string) => {
-
-    //@ts-ignore
-    setFormData({
-      ...formData,
-      [section]: {
-        ...formData?.[section],
-        [field]: value,
-      },
-    })
-    let regex = /[A-Za-z]+\d/i;
-    if(field == "password"){
-      if(field.length<=6 || !regex.test(value)){
-        setErrorPass(true)
-        return;
-    }
-  }
-  setErrorPass(false);
-  }
+  const navigate = useNavigate();
   const mutation = useMutation({
-    mutationFn: () => {
-      return api.post('/users',formData)
+    mutationFn: (data: z.infer<typeof formSchema>) => {
+      return api.post("/users", data);
     },
-    onSuccess: (data, variables, context) => {
-      if(data.status===200 )
-        navigate('/Login')
+    onSuccess: (data) => {
+      if (data.status === 200) navigate("/Login");
     },
-  })
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    mutation.mutate();
-  }
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      wardData: {
+        unitNumber: "",
+        name: "",
+        city: "",
+        country: "",
+        state: "",
+      },
+      userData: {
+        name: "",
+        email: "",
+        password: "",
+        member_number: "",
+        role: "",
+      },
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    mutation.mutate(data);
+  };
+  const {
+    data: dataWard,
+    isFetching,
+    refetch: refetchWard,
+  } = useGetWard(form.getValues("wardData.unitNumber"));
+
+  useEffect(() => {
+    console.log("DATA", dataWard);
+    if (!dataWard) {
+      form.setValue("wardData.name", "");
+      form.setValue("wardData.city", "");
+      form.setValue("wardData.state", "");
+      form.setValue("wardData.country", "");
+      form.setValue("wardData.id", undefined);
+    } else form.setValue("wardData", dataWard);
+  }, [dataWard]);
+  const roles = [
+    { id: "bishop", text: "Bispo" },
+    { id: "first_counselor", text: "1° Conselheiro" },
+    { id: "second_counselor", text: "2° Conselheiro" },
+    { id: "ward_clerk", text: "Secretário da Ala" },
+    { id: "assistant_ward_clerk", text: "Secretário Adjunto da Ala" },
+  ];
 
   return (
     <div className="flex flex-col items-center">
-       <div className="container max-w-3xl py-10">
-      <Card>
-        <CardHeader className="space-y-1 items-center">
-          <CardTitle className="text-2xl font-bold ">Cadastre-se</CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-6">
-            {/* Ward Data Section */}
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <h3 className="text-lg font-semibold">Informações da ala</h3>
-                <Separator className="flex-1 ml-3" />
-              </div>
+      <div className="container max-w-3xl py-10">
+        <Card>
+          <CardHeader className="space-y-1 items-center">
+            <CardTitle className="text-2xl font-bold">Cadastre-se</CardTitle>
+          </CardHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardContent className="space-y-6">
+                {/* Ward Data Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <h3 className="text-lg font-semibold">
+                      Informações da ala
+                    </h3>
+                    <Separator className="flex-1 ml-3" />
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="ward-name">Nome da ala</Label>
-                  <Input
-                    id="ward-name"
-                    value={formData?.wardData.name}
-                    onChange={(e) => handleChange("wardData", "name", e.target.value)}
-                    required
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="wardData.unitNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>N° da unidade</FormLabel>
+                          <FormControl>
+                            <InputButton
+                              onClickButton={() => refetchWard()}
+                              placeholder="N° da unidade"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="wardData.name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome da ala</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Nome da ala"
+                              disabled={!isFetching || !dataWard}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="wardData.city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Cidade</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Cidade"
+                              disabled={!isFetching || !dataWard}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="wardData.state"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Estado</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Estado"
+                              {...field}
+                              disabled={!isFetching || !dataWard}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="wardData.country"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>País</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="País"
+                              {...field}
+                              disabled={!isFetching || !dataWard}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="ward-city">Cidade</Label>
-                  <Input
-                    id="ward-city"
-                    value={formData?.wardData.city}
-                    onChange={(e) => handleChange("wardData", "city", e.target.value)}
-                    required
-                  />
+                {/* User Data Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <h3 className="text-lg font-semibold">Dados pessoais</h3>
+                    <Separator className="flex-1 ml-3" />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="userData.name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Seu nome" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="userData.role"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Chamado</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione seu chamado" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {roles.map((role) => (
+                                <SelectItem key={role.id} value={role.id}>
+                                  {role.text}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="userData.email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="seu@email.com"
+                              type="email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="userData.password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Senha</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Sua senha"
+                              type="password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="userData.member_number"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nº de membro</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Número de membro" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
+              </CardContent>
 
-                <div className="space-y-2">
-                  <Label htmlFor="ward-state">Estado</Label>
-                  <Input
-                    id="ward-state"
-                    value={formData?.wardData.state}
-                    onChange={(e) => handleChange("wardData", "state", e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="ward-country">País</Label>
-                  <Input
-                    id="ward-country"
-                    value={formData?.wardData.country}
-                    onChange={(e) => handleChange("wardData", "country", e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* User Data Section */}
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <h3 className="text-lg font-semibold">Dados pessoais</h3>
-                <Separator className="flex-1 ml-3" />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="user-name">Nome</Label>
-                  <Input
-                    id="user-name"
-                    value={formData?.userData.name}
-                    onChange={(e) => handleChange("userData", "name", e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="user-role">Chamado</Label>
-                  <Input
-                    id="user-role"
-                    value={formData?.userData.role}
-                    onChange={(e) => handleChange("userData", "role", e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="user-email">Email</Label>
-                  <Input
-                    id="user-email"
-                    type="email"
-                    value={formData?.userData.email}
-                    onChange={(e) => handleChange("userData", "email", e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="user-password">Senha</Label>
-                  <Input
-                    id="user-password"
-                    type="password"
-                    value={formData?.userData.password}
-                    onChange={(e) => handleChange("userData", "password", e.target.value)}
-                    required
-                  />
-                  <label className={errorPass?"text-sm text-red-700": "text-sm"}>*A senha deve conter ao menos 6 caracteres, uma letra e um número</label>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="user-member-number">Nº de membro</Label>
-                  <Input
-                    id="user-member-number"
-                    value={formData?.userData.member_number}
-                    onChange={(e) => handleChange("userData", "member_number", e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-          </CardContent>
-
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" type="button" onClick={() => navigate('/login')}>
-              Cancelar
-            </Button>
-            <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" disabled={mutation.isPending}>
-              {mutation.isPending ? (
-                <span className="flex items-center">Processando...</span>
-              ) : (
-                <span className="flex items-center">
-                  Salvar <Save className="ml-2 h-4 w-4" />
-                </span>
-              )}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+              <CardFooter className="flex justify-between">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => navigate("/login")}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700"
+                  disabled={mutation.isPending}
+                >
+                  {mutation.isPending ? (
+                    <span className="flex items-center">Processando...</span>
+                  ) : (
+                    <span className="flex items-center">
+                      Salvar <Save className="ml-2 h-4 w-4" />
+                    </span>
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
+      </div>
     </div>
-    </div>
-   
-  )
+  );
 }
-
