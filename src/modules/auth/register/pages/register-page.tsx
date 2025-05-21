@@ -21,6 +21,13 @@ import api from "@/api";
 import { useMutation } from "@tanstack/react-query";
 import { useGetWard } from "../hooks/useRegister.ts";
 import { InputButton } from "../components/InputButton.tsx";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select.tsx";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -109,6 +116,14 @@ export default function RegisterPage() {
       });
     }
   }, [isFetched]);
+
+  const roles = [
+    { id: "bishop", text: "Bispo" },
+    { id: "first_counselor", text: "1° Conselheiro" },
+    { id: "second_counselor", text: "2° Conselheiro" },
+    { id: "ward_clerk", text: "Secretário da Ala" },
+    { id: "assistant_ward_clerk", text: "Secretário Adjunto da Ala" },
+  ];
   return (
     <div className="flex flex-col items-center">
       <div className="container max-w-3xl py-10">
@@ -214,14 +229,19 @@ export default function RegisterPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="user-role">Chamado</Label>
-                    <Input
-                      id="user-role"
-                      value={formData?.userData.role}
-                      onChange={(e) =>
-                        handleChange("userData", "role", e.target.value)
-                      }
-                      required
-                    />
+                    <Select
+                      onValueChange={(e) => handleChange("userData", "role", e)}
+                      defaultValue={formData?.userData.role}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione seu chamado" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {roles.map((role) => (
+                          <SelectItem value={role.id}>{role.text}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
