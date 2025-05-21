@@ -2,13 +2,13 @@ export interface IRegisterUser {
   wardData: IWard;
   userData: IUserCreation;
 }
-interface IWard {
+export interface IWard {
   name: string;
   city: string;
   state: string;
   country: string;
   id: number | null;
-  unitNumber: string;
+  unit_number: string;
 }
 interface IUserCreation {
   name: string;

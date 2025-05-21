@@ -17,7 +17,7 @@ export const InputButton = forwardRef<HTMLInputElement, InputButtonProps>(
             type="button"
             variant="secondary"
             className="rounded-l-none border border-l-0"
-            onClick={onClickButton}
+            onClick={() => onClickButton()}
           >
             <Search />
           </Button>

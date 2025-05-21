@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -19,6 +19,8 @@ import { IRegisterUser } from "../interfaces/register-interface.ts";
 import { useNavigate } from "react-router";
 import api from "@/api";
 import { useMutation } from "@tanstack/react-query";
+import { useGetWard } from "../hooks/useRegister.ts";
+import { InputButton } from "../components/InputButton.tsx";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ export default function RegisterPage() {
       country: "",
       name: "",
       state: "",
-      unitNumber: "",
+      unit_number: "",
       id: null,
     },
   });
@@ -79,6 +81,34 @@ export default function RegisterPage() {
     mutation.mutate();
   };
 
+  const {
+    data: dataWard,
+    refetch: refetchWard,
+    isFetched,
+  } = useGetWard(formData?.wardData?.unit_number || "");
+
+  useEffect(() => {
+    if (!dataWard) {
+      //@ts-ignore
+      setFormData({
+        ...formData,
+        ["wardData"]: {
+          city: "",
+          country: "",
+          name: "",
+          state: "",
+          unit_number: formData?.wardData.unit_number || "",
+          id: null,
+        },
+      });
+    } else {
+      //@ts-ignore
+      setFormData({
+        ...formData,
+        ["wardData"]: dataWard,
+      });
+    }
+  }, [isFetched]);
   return (
     <div className="flex flex-col items-center">
       <div className="container max-w-3xl py-10">
@@ -97,10 +127,23 @@ export default function RegisterPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
+                    <Label htmlFor="ward-name">N° da unidade</Label>
+                    <InputButton
+                      onClickButton={() => refetchWard()}
+                      id="unit-number"
+                      value={formData?.wardData.unit_number}
+                      onChange={(e) =>
+                        handleChange("wardData", "unit_number", e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="ward-name">Nome da ala</Label>
                     <Input
                       id="ward-name"
                       value={formData?.wardData.name}
+                      disabled={!!formData?.wardData.id}
                       onChange={(e) =>
                         handleChange("wardData", "name", e.target.value)
                       }
@@ -112,6 +155,7 @@ export default function RegisterPage() {
                     <Label htmlFor="ward-city">Cidade</Label>
                     <Input
                       id="ward-city"
+                      disabled={!!formData?.wardData.id}
                       value={formData?.wardData.city}
                       onChange={(e) =>
                         handleChange("wardData", "city", e.target.value)
@@ -125,6 +169,7 @@ export default function RegisterPage() {
                     <Input
                       id="ward-state"
                       value={formData?.wardData.state}
+                      disabled={!!formData?.wardData.id}
                       onChange={(e) =>
                         handleChange("wardData", "state", e.target.value)
                       }
@@ -136,6 +181,7 @@ export default function RegisterPage() {
                     <Label htmlFor="ward-country">País</Label>
                     <Input
                       id="ward-country"
+                      disabled={!!formData?.wardData.id}
                       value={formData?.wardData.country}
                       onChange={(e) =>
                         handleChange("wardData", "country", e.target.value)
