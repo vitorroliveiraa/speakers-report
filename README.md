@@ -1,50 +1,48 @@
-# React + TypeScript + Vite
+Acesse: http://toolboxlds.avtechsolucoes.com.br/
+<p align="center">
+  <a>
+    <img alt="tests" title="Acessar site" src="https://github.com/vitorroliveiraa/speakers-report-api/blob/main/banner-toolbox-lds.png" style="width: 100%">
+  </a>
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 💡 Motivação
 
-Currently, two official plugins are available:
+Este projeto nasceu durante o exercício do meu chamado na [Igreja de Jesus Cristo](https://www.churchofjesuschrist.org/?lang=por). Servindo como Secretário da unidade que frequentava, uma das minhas responsabilidades era auxiliar na definição dos discursantes que viriam a compartilhar uma mensagem do evangelho com toda a congregação. Essa tarefa é feita juntamente com o bispado em paralelo com várias outras, é ai que surge o **problema** de alguns discursantes serem chamados com mais recorrência que outros e como todos precisam ter a oportunidade de falar, é nesse momento que o sistema entra pra facilitar na escolha dos nomes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔐 Quem Pode Acessar o Sistema
 
-## Expanding the ESLint configuration
+Somente quem tem os seguintes chamados pode acessar:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Bispado
 
-- Configure the top-level `parserOptions` property like this:
+- Bispo/Presidente de Ramo
+- 1° Conselheiro
+- 2° Conselheiro
+- 3° Conselheiro
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Secretariado
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- Secretário da Ala
+- Secretário Adjunto da Ala
+- Secretário Executivo da Ala
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## 📝 Guia Rápido de Uso
+
+### Cadastro Inicial
+
+- Preencher os dados:
+  -  Data da reunião em que foi realizado os discursos.
+  -  1° Discursante.
+  -  2° Discursante.
+  -  3° Discursante.
+
+### Listagem dos Dados Cadastrados
+
+- Os discursante são listados em ordem crescente em relação ao tempo desde o discurso.
+- Ao lado de cada nome, tem a quantidade de domingos que uma pessoa não discursa.
+  - É possível clicar na quantidade de domingos e ver a data do discurso e vice-versa.
+
+## 🤝 Como Posso Contribuir com o Projeto?
+
+Entre em contato comigo através do LinkedIn ou mande um e-mail em avtech.contato@gmail.com 
