@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 type Person = {
   last_speech_date: string;
@@ -12,6 +13,15 @@ interface Props {
 }
 
 export default function CustomList({ data }: Props) {
+  const [displayDates, setDisplayDates] = useState<Record<number, boolean>>({});
+
+  const toggleDisplay = (index: number) => {
+    setDisplayDates((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
   const sortedData = [...data].sort(
     (a, b) =>
       Number(b.sundays_since_last_speech) - Number(a.sundays_since_last_speech)
@@ -22,28 +32,28 @@ export default function CustomList({ data }: Props) {
       {sortedData?.map((person, index) => (
         <div
           key={index}
-          className="flex items-center gap-4 rounded-lg bg-slate-500 p-4 hover:bg-slate-600 delay-100 duration-100 cursor-pointer"
+          className="flex items-center gap-4 rounded-lg bg-slate-800 p-4 hover:bg-slate-700 delay-100 duration-100 cursor-pointer"
         >
           <div className="flex-1">
-            <h3 className="font-medium text-slate-100">
-              {person.name && person.name.includes(",")
-                ? person.name.split(",")[1]
-                : person.name}
-            </h3>
-          </div>
-          <div className="flex-1">
-            <div className="text-sm text-muted-foreground text-slate-100">
-              {person.last_speech_date}
-            </div>
+            <h3 className="font-medium text-slate-100">{person.name}</h3>
           </div>
           <Badge
             variant="outline"
-            className="rounded-full px-3 py-1 text-sm font-bold border-2 border-slate-300 bg-slate-400 text-white"
+            className="rounded-full px-3 py-1 text-sm font-bold border-2 border-slate-300 bg-slate-600 text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleDisplay(index);
+            }}
           >
-            {person.sundays_since_last_speech} domingos
+            {displayDates[index]
+              ? person.last_speech_date
+              : `${person.sundays_since_last_speech} domingos`}
           </Badge>
         </div>
       ))}
+      {sortedData?.length === 0 && (
+        <a href="">Nenhum discursante cadastrado.</a>
+      )}
     </div>
   );
 }

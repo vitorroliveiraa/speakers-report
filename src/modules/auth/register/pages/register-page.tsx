@@ -32,6 +32,7 @@ import {
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [errorPass, setErrorPass] = useState<boolean>(false);
+  const [errorNumberMember, setErrorNumberMember] = useState<boolean>(false);
 
   // Form data with default values from the provided JSON
   const [formData, setFormData] = useState<IRegisterUser | undefined>({
@@ -68,19 +69,22 @@ export default function RegisterPage() {
     });
     let regex = /[A-Za-z]+\d/i;
     if (field == "password") {
-      if (field.length <= 6 || !regex.test(value)) {
+      if (value.length < 6 || !regex.test(value)) {
         setErrorPass(true);
         return;
-      }
+      } else setErrorPass(false);
     }
-    setErrorPass(false);
+    if (field == "member_number" && value.length < 6) {
+      setErrorNumberMember(true);
+      return;
+    } else setErrorNumberMember(false);
   };
   const mutation = useMutation({
     mutationFn: () => {
       return api.post("/users", formData);
     },
     onSuccess: (data, variables, context) => {
-      if (data.status === 200) navigate("/Login");
+      if (data.status === 201) navigate("/Login");
     },
   });
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,11 +122,12 @@ export default function RegisterPage() {
   }, [isFetched]);
 
   const roles = [
-    { id: "bishop", text: "Bispo" },
-    { id: "first_counselor", text: "1° Conselheiro" },
-    { id: "second_counselor", text: "2° Conselheiro" },
-    { id: "ward_clerk", text: "Secretário da Ala" },
-    { id: "assistant_ward_clerk", text: "Secretário Adjunto da Ala" },
+    { id: "Bishop", text: "Bispo" },
+    { id: "1st Counselor", text: "1° Conselheiro" },
+    { id: "2nd Counselor", text: "2° Conselheiro" },
+    { id: "Ward Clerk", text: "Secretário da Ala" },
+    { id: "Assistant Ward Clerk", text: "Secretário Adjunto da Ala" },
+    { id: "Ward Executive Secretary", text: "Secretário Executivo da Ala" },
   ];
   return (
     <div className="flex flex-col items-center">
@@ -290,6 +295,13 @@ export default function RegisterPage() {
                       }
                       required
                     />
+                    <label
+                      className={
+                        errorNumberMember ? "text-sm text-red-700" : "text-sm"
+                      }
+                    >
+                      *O Nº deve conter ao menos 6 caracteres
+                    </label>
                   </div>
                 </div>
               </div>

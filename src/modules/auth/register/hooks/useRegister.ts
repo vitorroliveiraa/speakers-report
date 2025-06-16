@@ -6,11 +6,12 @@ export const useGetWard = (unitNumber: string) => {
   const queryData = useQuery({
     queryKey: ["obter-ala" + unitNumber],
     queryFn: async (): Promise<IWard> => {
-      const { data } = await api.get("wards/validate?unitNumber=" + unitNumber);
+      const { data } = await api.get<{ ward: IWard }>(
+        "wards/validate?unitNumber=" + unitNumber
+      );
       return data.ward;
     },
     staleTime: 0,
-    cacheTime: 0,
     enabled: false,
   });
   return queryData;

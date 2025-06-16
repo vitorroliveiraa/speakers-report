@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import * as React from "react";
 
@@ -32,19 +32,19 @@ export default function DatePicker<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>
 >({ label, field, error }: AutoCompleteInputProps<TFieldValues, TName>) {
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>();
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <FormItem className="my-4">
       <FormLabel className="max-sm:text-base text-slate-700">{label}</FormLabel>
       <FormControl>
         <div className="relative">
-          <Popover>
+          <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start text-left font-normal max-sm:h-12 text-sm max-sm:text-base border-2",
+                  "w-full justify-start text-left font-normal max-sm:h-12 text-sm max-sm:text-base border-2 border-slate-200",
                   !field.value && "text-muted-foreground",
                   error?.message && "border-red-500"
                 )}
@@ -53,23 +53,23 @@ export default function DatePicker<
                 {field.value ? (
                   format(field.value, "dd/MM/yyyy", { locale: ptBR })
                 ) : (
-                  <span>Selecione uma data</span>
+                  <span className="text-slate-500">Selecione uma data</span>
                 )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="center">
               <Calendar
                 mode="single"
-                selected={selectedDate}
+                selected={field.value}
                 onSelect={(date) => {
                   field.onChange(date);
-                  setSelectedDate(date);
+                  setIsOpen(false);
                 }}
                 autoFocus
                 showOutsideDays={true}
-                defaultMonth={new Date()}
+                defaultMonth={field.value || new Date()}
                 startMonth={new Date(1999, 11)}
-                endMonth={new Date(2025, 2)}
+                endMonth={new Date()}
                 locale={ptBR}
                 disabled={{ dayOfWeek: [1, 2, 3, 4, 5, 6] }}
               />
