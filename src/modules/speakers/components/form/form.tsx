@@ -1,21 +1,25 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormField } from "../ui/form.tsx";
-import { Button } from "../ui/button.tsx";
-import AutoCompleteInput from "../input/autoCompleteInput.tsx";
+import { Form, FormField } from "../../../../components/ui/form.tsx";
+import { Button } from "../../../../components/ui/button.tsx";
+import AutoCompleteInput from "../../../../components/input/autoCompleteInput.tsx";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import DatePicker from "../input/datePicker.tsx";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert.tsx";
+import DatePicker from "../../../../components/input/datePicker.tsx";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../../../components/ui/alert.tsx";
 import { CircleAlert } from "lucide-react";
-import { formSchema } from "../../validation/formSchema.tsx";
-
-const URL_API = import.meta.env.VITE_URL_API;
+import { formSchema } from "../../../../validation/formSchema.tsx";
+import api from "@/api.ts";
+import { getCurrentUserLocal } from "@/utils/handle_cookies.ts";
 
 type Item = {
-  id: number;
+  id: string;
   name: string;
+  type: string;
 };
 
 interface Props {
@@ -32,17 +36,27 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
     if (speaker)
       setSelectedSpeakers((prevSelected) => [...prevSelected, speaker?.name]);
     if (clearField)
-      setSelectedSpeakers(selectedSpeakers.filter((x) => x != clearField));
+      setSelectedSpeakers((prev) => prev.filter((x) => x !== clearField));
+  };
+
+  const addMember = (member: Item) => {
+    setMembers((prev) => [...prev, member]);
   };
 
   useEffect(() => {
-    axios.get(`${URL_API}/church_members`).then((res) => {
+    api.get(`/speakers/church-members`).then((res) => {
       setMembers(res.data);
     });
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstSpeaker: undefined,
+      secondSpeaker: undefined,
+      thirdSpeaker: undefined,
+      sacramentMeetingDate: undefined,
+    },
   });
 
   useEffect(() => {
@@ -56,41 +70,61 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
     return () => clearTimeout(timer);
   }, [viewAlert]);
 
+  const handleFormReset = () => {
+    form.reset({
+      firstSpeaker: undefined,
+      secondSpeaker: undefined,
+      thirdSpeaker: undefined,
+      sacramentMeetingDate: undefined,
+    });
+    setSelectedSpeakers([]);
+  };
+
   function onSubmit(values: z.infer<typeof formSchema>) {
+    const dados = getCurrentUserLocal();
+
     const data = {
-      sacrament_meeting_date: values.sacramentMeetingDate,
+      sacrament_meeting_date: values.sacramentMeetingDate.toISOString(),
+      ward_id: dados?.ward_id,
       speakers: [
         {
-          member_id: values.firstSpeaker,
+          id: values.firstSpeaker.id,
+          type: values.firstSpeaker.type,
           speaker_position: 1,
         },
         {
-          member_id: values.secondSpeaker,
+          id: values.secondSpeaker.id,
+          type: values.secondSpeaker.type,
           speaker_position: 2,
         },
         {
-          member_id: values.thirdSpeaker,
+          id: values.thirdSpeaker.id,
+          type: values.thirdSpeaker.type,
           speaker_position: 3,
         },
       ],
     };
 
-    axios
-      .post(`${URL_API}/speakers/insert`, data)
+    api
+      .post(`/speakers/insert`, data)
       .then(() => {
         onMemberAdded();
-        form.reset();
+        handleFormReset();
       })
       .catch(function (err) {
         setViewAlert(true);
-        setTextViewAlert(err.response.data.error);
+        setTextViewAlert(err.response.data.message);
       });
   }
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onReset={handleFormReset}
+          className="space-y-8"
+        >
           <div>
             <FormField
               control={form.control}
@@ -111,11 +145,10 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                 <AutoCompleteInput
                   label="1° Discursante"
                   field={field}
-                  error={fieldState.error}
-                  data={members.filter(
-                    (member) => !selectedSpeakers.includes(member.name)
-                  )}
+                  error={fieldState.error?.message}
+                  data={members}
                   onSpeakerSelect={handleSpeakerSelect}
+                  onAddMember={addMember}
                 />
               )}
             />
@@ -127,10 +160,8 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                 <AutoCompleteInput
                   label="2° Discursante"
                   field={field}
-                  error={fieldState.error}
-                  data={members.filter(
-                    (member) => !selectedSpeakers.includes(member.name)
-                  )}
+                  error={fieldState.error?.message}
+                  data={members}
                   onSpeakerSelect={handleSpeakerSelect}
                 />
               )}
@@ -143,10 +174,8 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                 <AutoCompleteInput
                   label="3° Discursante"
                   field={field}
-                  error={fieldState.error}
-                  data={members.filter(
-                    (member) => !selectedSpeakers.includes(member.name)
-                  )}
+                  error={fieldState.error?.message}
+                  data={members}
                   onSpeakerSelect={handleSpeakerSelect}
                 />
               )}
@@ -155,7 +184,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <Button
               type="submit"
-              className="max-sm:h-12 bg-slate-500 hover:bg-slate-600"
+              className="max-sm:h-12 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded"
             >
               Cadastrar
             </Button>
