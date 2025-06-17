@@ -23,7 +23,7 @@ interface CustomInputProps<
   error?: string;
   data: Item[];
   position?: string;
-  onSpeakerSelect: (speaker?: Item, clearField?: string) => void;
+  // onSpeakerSelect: (speaker?: Item, clearField?: string) => void;
   onAddMember?: (member: Item) => void;
 }
 
@@ -34,7 +34,6 @@ const AutoCompleteInput = <
   label,
   field,
   data,
-  onSpeakerSelect,
   error,
   onAddMember,
 }: CustomInputProps<TFieldValues, TName>) => {
@@ -85,7 +84,7 @@ const AutoCompleteInput = <
   const clearInput = () => {
     setInputText("");
     field.onChange(undefined);
-    onSpeakerSelect(undefined, field.value?.name);
+    // onSpeakerSelect(undefined, field.value?.name);
     setSuggestions([]);
     setNoMatch(false);
   };
@@ -93,7 +92,7 @@ const AutoCompleteInput = <
   const handleSuggestionClick = (suggestion: Item) => {
     setInputText(suggestion.name);
     field.onChange(suggestion);
-    onSpeakerSelect(suggestion);
+    // onSpeakerSelect(suggestion);
     setTimeout(() => setSuggestions([]), 0);
   };
 
@@ -116,7 +115,7 @@ const AutoCompleteInput = <
 
       skipNextSuggestionsUpdate.current = true; // <-- Adiciona aqui
 
-      onSpeakerSelect(response.data);
+      // onSpeakerSelect(response.data);
       field.onChange(response.data);
       if (onAddMember) onAddMember(response.data);
       setIsAddingItem(false);

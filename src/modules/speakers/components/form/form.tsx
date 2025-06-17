@@ -28,16 +28,16 @@ interface Props {
 
 const ProfileForm = ({ onMemberAdded }: Props) => {
   const [members, setMembers] = useState<Item[]>([]);
-  const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
+  // const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
   const [viewAlert, setViewAlert] = useState(false);
   const [textViewAlert, setTextViewAlert] = useState("");
 
-  const handleSpeakerSelect = (speaker?: Item, clearField?: string) => {
-    if (speaker)
-      setSelectedSpeakers((prevSelected) => [...prevSelected, speaker?.name]);
-    if (clearField)
-      setSelectedSpeakers((prev) => prev.filter((x) => x !== clearField));
-  };
+  // const handleSpeakerSelect = (speaker?: Item, clearField?: string) => {
+  //   if (speaker)
+  //     setSelectedSpeakers((prevSelected) => [...prevSelected, speaker?.name]);
+  //   if (clearField)
+  //     setSelectedSpeakers((prev) => prev.filter((x) => x !== clearField));
+  // };
 
   const addMember = (member: Item) => {
     setMembers((prev) => [...prev, member]);
@@ -77,7 +77,7 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
       thirdSpeaker: undefined,
       sacramentMeetingDate: undefined,
     });
-    setSelectedSpeakers([]);
+    // setSelectedSpeakers([]);
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -147,7 +147,6 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                   field={field}
                   error={fieldState.error?.message}
                   data={members}
-                  onSpeakerSelect={handleSpeakerSelect}
                   onAddMember={addMember}
                 />
               )}
@@ -162,7 +161,6 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                   field={field}
                   error={fieldState.error?.message}
                   data={members}
-                  onSpeakerSelect={handleSpeakerSelect}
                 />
               )}
             />
@@ -176,7 +174,6 @@ const ProfileForm = ({ onMemberAdded }: Props) => {
                   field={field}
                   error={fieldState.error?.message}
                   data={members}
-                  onSpeakerSelect={handleSpeakerSelect}
                 />
               )}
             />
