@@ -1,5 +1,3 @@
-import type React from "react";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,15 +10,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginSchema } from "../schema/login-schema";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { FormField, FormItem } from "@/components/ui/form";
 import api from "@/api";
-import { clearLegacyCookies, setLegacyCookies } from "@/utils/handle_cookies";
 import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { AxiosError } from "axios";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -37,7 +34,7 @@ export default function LoginForm() {
     mutationFn: (values: z.infer<typeof loginSchema>) => {
       return api.post("/auth/login", values);
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data) => {
       if (data.status === 200) {
         // setLegacyCookies({ accessToken: data.data.token, refreshToken: "" });
         localStorage.setItem("accessToken", data.data.token);
@@ -47,6 +44,13 @@ export default function LoginForm() {
       }
     },
   });
+
+  let errorMessage: string | null = null;
+
+  if (mutation.isError) {
+    const error = mutation.error as AxiosError<{ message: string }>;
+    errorMessage = error.response?.data.message ?? "Erro desconhecido";
+  }
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof loginSchema>) {
@@ -107,9 +111,7 @@ export default function LoginForm() {
             {mutation.isError && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-red-700">
-                    {mutation.error?.response.data.message}
-                  </label>
+                  <label className="text-red-700">{errorMessage}</label>
                 </div>
               </div>
             )}

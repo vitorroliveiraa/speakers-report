@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -83,7 +82,7 @@ export default function RegisterPage() {
     mutationFn: () => {
       return api.post("/users", formData);
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data) => {
       if (data.status === 201) navigate("/Login");
     },
   });

@@ -1,12 +1,4 @@
-import {
-  Home,
-  Settings,
-  Users,
-  BarChart,
-  Menu,
-  Minus,
-  Upload,
-} from "lucide-react";
+import { Minus, Upload } from "lucide-react";
 
 import {
   Sidebar,
@@ -22,13 +14,9 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Outlet, useNavigate } from "react-router";
-import {
-  clearLegacyCookies,
-  getCurrentUserLocal,
-} from "@/utils/handle_cookies";
+import { getCurrentUserLocal } from "@/utils/handle_cookies";
 import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
-import logotipo from "@/assets/logotipo-toolbox-lds-sidebar-white.png";
 import logotipo1 from "@/assets/toolbox-icon-white-transparente.png";
 
 const navigationItems = [
