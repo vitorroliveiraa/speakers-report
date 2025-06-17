@@ -2,12 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input.tsx";
 import { Loader2, Plus, X } from "lucide-react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form.tsx";
-import {
-  ControllerRenderProps,
-  FieldError,
-  FieldPath,
-  FieldValues,
-} from "react-hook-form";
+import { ControllerRenderProps, FieldPath, FieldValues } from "react-hook-form";
 import { User as UserIcon } from "lucide-react";
 import { Button } from "../ui/button.tsx";
 import api from "@/api.ts";

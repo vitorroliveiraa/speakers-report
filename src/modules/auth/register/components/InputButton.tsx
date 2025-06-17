@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input, InputProps } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { forwardRef, useState } from "react";
+import { forwardRef } from "react";
 
 type InputButtonProps = InputProps & {
   onClickButton: () => void;

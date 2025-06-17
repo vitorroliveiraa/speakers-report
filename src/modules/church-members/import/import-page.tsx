@@ -1,22 +1,13 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import passo1 from "@/assets/passo-a-passo/passo1.png";
 import passo2 from "@/assets/passo-a-passo/passo2.png";
 import passo3 from "@/assets/passo-a-passo/passo3.png";
 import { Label } from "@/components/ui/label";
 import { useRef } from "react";
-import { getAccessToken } from "@/utils/handle_cookies";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/api";
-import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
 
 const ImportChurchMemberPage = () => {

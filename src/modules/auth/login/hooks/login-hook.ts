@@ -1,8 +1,8 @@
-import api from "@/api"
+// import api from "@/api"
 
-export interface Login{
-    email:string
-    password:string
+export interface Login {
+  email: string;
+  password: string;
 }
 
 /* const mutatationLogin = useMutation({

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getAccessToken } from "./utils/handle_cookies";
-import { useEffect } from "react";
 
 const baseURL = import.meta.env.VITE_URL_API;
 const accessToken = getAccessToken();
