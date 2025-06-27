@@ -13,7 +13,6 @@ const PrivateRoutes = () => {
     if (!decodedToken.exp || decodedToken.exp < dateNow.getTime() / 1000)
       isExpired = true;
   }
-  console.log("IsExpired", isExpired);
 
   return !isExpired ? <MainLayout /> : <Navigate to="/login" />;
 };
