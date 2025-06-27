@@ -28,7 +28,7 @@ export default function CustomList({ data }: Props) {
   );
 
   return (
-    <div className="space-y-4 mb-4">
+    <div className="space-y-4 mb-4 justify-self-center">
       {sortedData?.map((person, index) => (
         <div
           key={index}
@@ -52,7 +52,9 @@ export default function CustomList({ data }: Props) {
         </div>
       ))}
       {sortedData?.length === 0 && (
-        <a href="">Nenhum discursante cadastrado.</a>
+        <a className="text-slate-700" href="">
+          Nenhum discursante cadastrado.
+        </a>
       )}
     </div>
   );
