@@ -51,7 +51,6 @@ export default function RegisterPage() {
       id: null,
     },
   });
-  console.log(formData);
 
   const handleChange = (
     section: "wardData" | "userData",
@@ -122,11 +121,11 @@ export default function RegisterPage() {
 
   const roles = [
     { id: "Bishop", text: "Bispo" },
-    { id: "1st Counselor", text: "1° Conselheiro" },
-    { id: "2nd Counselor", text: "2° Conselheiro" },
-    { id: "Ward Clerk", text: "Secretário da Ala" },
-    { id: "Assistant Ward Clerk", text: "Secretário Adjunto da Ala" },
-    { id: "Ward Executive Secretary", text: "Secretário Executivo da Ala" },
+    { id: "FirstCounselor", text: "1° Conselheiro" },
+    { id: "SecondCounselor", text: "2° Conselheiro" },
+    { id: "WardClerk", text: "Secretário da Ala" },
+    { id: "AssistantWardClerk", text: "Secretário Adjunto da Ala" },
+    { id: "WardExecutiveSecretary", text: "Secretário Executivo da Ala" },
   ];
   return (
     <div className="flex flex-col items-center">
@@ -235,14 +234,16 @@ export default function RegisterPage() {
                     <Label htmlFor="user-role">Chamado</Label>
                     <Select
                       onValueChange={(e) => handleChange("userData", "role", e)}
-                      defaultValue={formData?.userData.role}
+                      value={formData?.userData.role}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione seu chamado" />
                       </SelectTrigger>
                       <SelectContent>
                         {roles.map((role) => (
-                          <SelectItem value={role.id}>{role.text}</SelectItem>
+                          <SelectItem key={role.id} value={role.id}>
+                            {role.text}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
